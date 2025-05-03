@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+void encrypt(char *message, int key) {
+    int len = strlen(message);
+    int rows = (len + key - 1) / key;
+    char *cipher = (char *)malloc(rows * key + 1);
+    int index = 0;
+    for (int col = 0; col < key; col++) {
+        for (int row = 0; row < rows; row++) {
+            if (row * key + col < len) {
+                cipher[index++] = message[row * key + col];
+            }
+        }
+    }
+    cipher[index] = '\0';
+    printf("Encrypted: %s\n", cipher);
+    free(cipher);
+}
+void decrypt(char *cipher, int key) {
+    int len = strlen(cipher);
+    int rows = (len + key - 1) / key;
+    char *message = (char *)malloc(len + 1);
+    int index = 0;
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < key; col++) {
+            if (row + col * rows < len) {
+                message[index++] = cipher[row + col * rows];
+            }
+        }
+    }
+    message[index] = '\0';
+    printf("Decrypted: %s\n", message);
+    free(message);
+}
+int main() {
+    char message[] = "HELLO WORLD";
+    int key = 3;
+
+    encrypt(message, key);
+    char cipher[] = "HLOOLEL WRD";
+    decrypt(cipher, key);
+
+    return 0;
+}
